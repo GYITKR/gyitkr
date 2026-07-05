@@ -2,8 +2,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createToken, requireAuth, SESSION_COOKIE } from "@/lib/auth";
-import { addItem as addManifestItem } from "@/lib/manifest";
+import { addItem as addManifestItem, removeItem } from "@/lib/manifest";
 import { revalidatePath } from "next/cache";
+import { del } from "@vercel/blob";
 
 export async function login(formData: FormData): Promise<void> {
   const password = String(formData.get("password") ?? "");
@@ -28,6 +29,14 @@ export async function addItem(input: {
 }): Promise<void> {
   await requireAuth();
   await addManifestItem(input);
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+export async function deleteItem(id: string): Promise<void> {
+  await requireAuth();
+  const removed = await removeItem(id);
+  if (removed) await del(removed.url);
   revalidatePath("/");
   revalidatePath("/admin");
 }

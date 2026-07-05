@@ -1,4 +1,4 @@
-import Gallery from "@/components/Gallery";
+import AdminGallery from "@/components/AdminGallery";
 import Lightbox from "@/components/Lightbox";
 import Uploader from "@/components/Uploader";
 import { readManifest } from "@/lib/manifest";
@@ -22,7 +22,7 @@ export default async function AdminPage() {
         <h1 style={{ fontSize: "clamp(32px,6vw,64px)" }}>작업 <em>관리</em></h1>
       </section>
       <Uploader />
-      <Gallery items={items} admin />
+      <AdminGallery items={items} />
       <Lightbox />
     </>
   );
