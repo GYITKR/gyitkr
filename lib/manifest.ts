@@ -4,6 +4,9 @@ import type { Manifest, PortfolioItem } from "./types";
 const MANIFEST_PATH = "portfolio/manifest.json";
 
 export async function readManifest(): Promise<Manifest> {
+  // 스토리지(Blob 토큰) 미설정 시 빈 포트폴리오로 우아하게 동작
+  // (로컬 미리보기 및 스토어 연결 전 최초 배포에서 500 방지)
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return { items: [] };
   const { blobs } = await list({ prefix: MANIFEST_PATH, limit: 1 });
   const found = blobs.find((b) => b.pathname === MANIFEST_PATH);
   if (!found) return { items: [] };

@@ -24,7 +24,10 @@ vi.stubGlobal("fetch", async (url: string) => {
 import { readManifest, addItem, removeItem } from "./manifest";
 
 describe("manifest", () => {
-  beforeEach(() => store.clear());
+  beforeEach(() => {
+    store.clear();
+    process.env.BLOB_READ_WRITE_TOKEN = "test-token"; // 모킹된 Blob 경로 활성화
+  });
 
   it("빈 저장소에서 빈 items 반환", async () => {
     const m = await readManifest();
