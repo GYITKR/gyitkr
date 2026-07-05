@@ -1,0 +1,10 @@
+:root{
+  --maxw:1360px; --gap:18px;
+  --bg:#0A0A08; --surface:#141412; --ink:#F4F4EF; --muted:#7C7C73;
+  --line:rgba(255,255,255,.09); --accent:#C8FF00;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body),-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
