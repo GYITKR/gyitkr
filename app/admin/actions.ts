@@ -1,7 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createToken, SESSION_COOKIE } from "@/lib/auth";
+import { createToken, requireAuth, SESSION_COOKIE } from "@/lib/auth";
+import { addItem as addManifestItem } from "@/lib/manifest";
+import { revalidatePath } from "next/cache";
 
 export async function login(formData: FormData): Promise<void> {
   const password = String(formData.get("password") ?? "");
@@ -19,4 +21,13 @@ export async function login(formData: FormData): Promise<void> {
 export async function logout(): Promise<void> {
   (await cookies()).delete(SESSION_COOKIE);
   redirect("/admin/login");
+}
+
+export async function addItem(input: {
+  url: string; pathname: string; width: number; height: number;
+}): Promise<void> {
+  await requireAuth();
+  await addManifestItem(input);
+  revalidatePath("/");
+  revalidatePath("/admin");
 }

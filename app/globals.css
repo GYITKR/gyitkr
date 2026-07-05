@@ -39,3 +39,6 @@ footer.site .foot a:hover{color:var(--ink);border-color:var(--accent)}
 .lb .x{position:fixed;top:16px;right:22px;font-size:40px;line-height:1;color:var(--accent);cursor:pointer;z-index:1000}
 @media(max-width:900px){.gallery{columns:3 200px}}
 @media(max-width:600px){.gallery{columns:2 150px;--gap:12px}}
+.drop{max-width:var(--maxw);margin:0 auto;padding:8px 26px 20px}
+.dropinner{display:block;border:2px dashed color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:16px;padding:26px;text-align:center;color:var(--muted);font-size:14px;cursor:pointer;background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.dropmsg{max-width:var(--maxw);margin:6px auto 0;padding:0 26px;font-size:13px;color:var(--muted)}
