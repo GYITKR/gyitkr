@@ -21,6 +21,7 @@ export async function writeManifest(m: Manifest): Promise<void> {
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
+    cacheControlMaxAge: 0, // 고정 경로 매니페스트 — CDN 캐시 방지(업로드/삭제 즉시 반영)
   });
 }
 

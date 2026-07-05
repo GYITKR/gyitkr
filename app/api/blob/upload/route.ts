@@ -10,7 +10,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body,
       request,
       onBeforeGenerateToken: async () => {
-        const secret = process.env.AUTH_SECRET ?? "";
+        const secret = process.env.AUTH_SECRET;
+        if (!secret) throw new Error("unauthorized"); // AUTH_SECRET 미설정 시 fail-closed
         const token = (await cookies()).get(SESSION_COOKIE)?.value;
         if (!(await verifyToken(token, secret))) throw new Error("unauthorized");
         return {
