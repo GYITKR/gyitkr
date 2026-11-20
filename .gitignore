@@ -49,3 +49,7 @@ next-env.d.ts
 
 # claude / superpowers
 .superpowers/
+
+# astro
+/dist/
+.astro/

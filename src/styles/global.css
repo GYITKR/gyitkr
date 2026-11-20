@@ -1,0 +1,16 @@
+:root{--bg:#f0efeb;--fg:#181818;--sub:#77756f;--line:#dcdad3;--card:#fff;--pt:#18a058;--frame:#1a1a1a;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+img{display:block}
+header.top{max-width:1240px;margin:auto;display:flex;align-items:center;padding:20px 28px;gap:16px}
+.logo{font-weight:800}.logo span{color:var(--sub);font-weight:600;margin-left:6px;letter-spacing:.06em;font-size:.86em}
+.hd-r{margin-left:auto;display:flex;gap:8px}
+.btn{padding:10px 16px;border-radius:99px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);white-space:nowrap}
+.btn.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.phone{width:280px;aspect-ratio:9/19.5;border-radius:42px;background:var(--frame);padding:10px;box-shadow:0 30px 60px rgba(0,0,0,.25);flex:none;position:relative;display:block}
+.phone .scr{width:100%;height:100%;border-radius:33px;overflow:hidden;background:#fff;position:relative}
+.phone .scr::before{content:"";position:absolute;top:8px;left:50%;translate:-50% 0;width:76px;height:20px;border-radius:12px;background:#111;z-index:3}
+.phone .scr img{width:100%;height:auto}
+.empty{color:var(--sub);text-align:center;padding:60px 0}
+footer.bottom{max-width:1240px;margin:auto;padding:0 28px 40px;color:var(--sub);font-size:13px}
