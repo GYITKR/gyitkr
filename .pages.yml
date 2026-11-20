@@ -1,0 +1,181 @@
+# Pages CMS(https://app.pagescms.org) 관리자 페이지 설정
+# 여기서 저장하면 main 브랜치에 커밋되고, GitHub Actions가 사이트를 다시 배포합니다(2~3분).
+
+media:
+  input: src/uploads
+  output: /uploads
+  rename: random
+
+content:
+  - name: works
+    label: 작업물
+    type: collection
+    path: src/content/works
+    format: yaml-frontmatter
+    filename: "{year}{month}{day}-{hour}{minute}{second}.md"
+    view:
+      fields: [brand, product, category, order, published]
+      primary: product
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: brand
+        label: 브랜드
+        type: string
+        description: 예) 솔미르. 브랜드와 제품명을 비우면 "상세페이지 작업 01"처럼 표시됩니다.
+      - name: product
+        label: 제품명
+        type: string
+      - name: category
+        label: 분야
+        type: select
+        options:
+          values: [상세페이지, 뷰티, 식품, 건강기능식품, 리빙, 패션, 가전·디지털, 반려동물, 펀딩, 기타]
+      - name: year
+        label: 연도
+        type: number
+        options:
+          min: 2000
+          max: 2100
+      - name: summary
+        label: 한 줄 설명
+        type: string
+        description: 프로젝트 화면 제목 아래에 나옵니다. 예) 민감 피부를 위한 시카 앰플 상세페이지
+      - name: detail
+        label: 상세페이지 이미지 (필수)
+        type: image
+        required: true
+        description: 세로로 긴 PNG/JPG 한 장. 사이트에는 자동으로 가볍게 변환되어 올라갑니다. 한 파일 50MB 이하로 올려 주세요.
+      - name: thumbnail
+        label: 카드 썸네일 (선택)
+        type: image
+        description: 비우면 상세페이지 맨 윗부분을 잘라서 씁니다.
+      - name: roles
+        label: 담당 범위
+        type: string
+        list: true
+        description: 한 칸에 하나씩. 예) 기획, 카피, 디자인, 촬영 디렉팅
+      - name: period
+        label: 작업 기간
+        type: string
+        description: 예) 2주
+      - name: client
+        label: 작업 형태
+        type: string
+        description: 예) 인하우스, 에이전시, 외주, 개인 작업
+      - name: target
+        label: 타깃
+        type: string
+        description: 예) 20–30대 민감성 피부 여성
+      - name: results
+        label: 성과 숫자
+        type: object
+        list: true
+        description: 실제로 확인된 숫자만 적어 주세요. 비우면 표시하지 않습니다.
+        fields:
+          - name: label
+            label: 항목
+            type: string
+            description: 예) 구매 전환율
+          - name: value
+            label: 값
+            type: string
+            description: 예) +42%
+      - name: wireframe
+        label: 구성안 이미지 (선택)
+        type: image
+        description: 있으면 프로젝트 화면 왼쪽에 보여 줍니다. 없으면 아래 섹션 목록으로 구성안을 그립니다.
+      - name: sections
+        label: 섹션 노트 (선택)
+        type: object
+        list: true
+        description: 상세페이지를 스크롤하면 "지금 보는 섹션" 칸에 이 설명이 바뀌어 나옵니다.
+        fields:
+          - name: name
+            label: 섹션 이름
+            type: string
+            description: 예) 인트로, 공감, 핵심 차별점
+          - name: note
+            label: 기획 의도
+            type: text
+          - name: start
+            label: 시작 위치(%)
+            type: number
+            description: 상세페이지 맨 위 = 0, 맨 아래 = 100. 비우면 순서대로 똑같이 나눕니다.
+            options:
+              min: 0
+              max: 100
+      - name: order
+        label: 순서
+        type: number
+        description: 작은 숫자가 앞에 나옵니다.
+      - name: featured
+        label: 첫 화면 휴대폰에 보여 주기
+        type: boolean
+        description: 세로로 긴 작업 중에서 최대 3개. 아무것도 고르지 않으면 앞의 작업이 나옵니다.
+      - name: published
+        label: 공개
+        type: boolean
+        default: true
+        description: 끄면 사이트에서 숨깁니다(삭제는 안 됨).
+
+  - name: profile
+    label: 프로필
+    type: file
+    path: src/data/profile.json
+    format: json
+    fields:
+      - name: name
+        label: 이름
+        type: string
+        required: true
+      - name: nameEn
+        label: 영문 이름
+        type: string
+      - name: role
+        label: 직무
+        type: string
+        description: 예) 상세페이지 디자이너
+      - name: pitch
+        label: 소개 한 문장
+        type: string
+        description: 첫 화면 큰 문구 아래에 나옵니다. 비워도 됩니다.
+      - name: career
+        label: 경력·학력
+        type: object
+        list: true
+        fields:
+          - name: period
+            label: 기간
+            type: string
+            description: 예) 2024 – 현재
+          - name: text
+            label: 내용
+            type: string
+      - name: tools
+        label: 사용 툴
+        type: string
+        list: true
+      - name: email
+        label: 이메일
+        type: string
+        description: 적으면 상단 "메일" 버튼과 연락처에 나옵니다.
+      - name: links
+        label: 링크
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: 이름
+            type: string
+            description: 예) 인스타그램, 비핸스
+          - name: url
+            label: 주소
+            type: string
+      - name: resume
+        label: 이력서 PDF
+        type: file
+        options:
+          extensions: [pdf]
+        description: 올리면 상단에 "이력서 PDF" 버튼이 생깁니다.

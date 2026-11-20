@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import { profile, url } from '../lib/works';
+import { findFileUrl } from '../lib/media';
+
+interface Props { title?: string; description?: string }
+const { title, description } = Astro.props;
+const siteTitle = `${profile.name} · ${profile.role} 포트폴리오`;
+const fullTitle = title ? `${title} — ${profile.name}` : siteTitle;
+const desc = description || `${profile.name}(${profile.nameEn}) ${profile.role} 포트폴리오. 모든 작업을 실제 모바일 화면 그대로 보여 드립니다.`;
+const resumeUrl = findFileUrl(profile.resume);
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="light" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="logo" href={url()}>{profile.name}<span>{profile.nameEn}</span></a>
+      <div class="hd-r">
+        {profile.email && <a class="btn" href={`mailto:${profile.email}`}>메일</a>}
+        {resumeUrl && <a class="btn pri" href={resumeUrl} download>이력서 PDF ↓</a>}
+      </div>
+    </header>
+    <slot />
+    <footer class="bottom">© {new Date().getFullYear()} {profile.name} {profile.nameEn}</footer>
+  </body>
+</html>

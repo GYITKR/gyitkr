@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { getWorks, featuredWorks, profile, url } from '../lib/works';
+import { responsive, topCrop } from '../lib/media';
+
+const works = await getWorks();
+const featured = await Promise.all(
+  featuredWorks(works).map(async (w) => ({ w, img: await responsive(w.detail, [360]) })),
+);
+const cards = await Promise.all(
+  works.map(async (w) => ({ w, mini: await topCrop(w.thumbnail ?? w.detail, 368, 484) })),
+);
+const meta = (w: (typeof works)[number]) =>
+  [w.data.category, w.data.year, w.data.roles.join(' · ')].filter(Boolean).join(' · ');
+const hasAbout = profile.career.length > 0 || profile.tools.length > 0 || !!profile.email || profile.links.length > 0;
+---
+<Base>
+  <section class="hero">
+    <div>
+      <h1>쇼핑은 폰에서 하니까,<br /><em>폰에서 팔리는</em><br />상세페이지를.</h1>
+      <p>{profile.name} · {profile.role}. {profile.pitch && `${profile.pitch} `}모든 작업을 실제 모바일 화면 그대로 보여 드립니다.</p>
+    </div>
+    {featured.length > 0 && (
+      <div class="stage">
+        {featured.map(({ w, img }, k) => (
+          <a class="phone" href={url(`works/${w.id}/`)} aria-label={w.title}>
+            <div class="scr">
+              <div class="auto" style={`animation-delay:-${k * 6}s;animation-duration:${Math.round(Math.min(60, Math.max(16, (w.detail.height / w.detail.width) * 3)))}s`}>
+                <img src={img.src} srcset={img.srcset} sizes="180px" width={img.width} height={img.height} alt="" fetchpriority={k === 0 ? 'high' : 'auto'} />
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section class="sec" id="work">
+    <h2>WORK</h2>
+    {cards.length === 0 && <p class="empty">아직 등록된 작업이 없습니다.</p>}
+    <div class="cards">
+      {cards.map(({ w, mini }) => (
+        <a class="card" href={url(`works/${w.id}/`)}>
+          {meta(w) && <div class="cat">{meta(w)}</div>}
+          <h3>{w.title}</h3>
+          {w.data.results[0] && <div class="r">{[w.data.results[0].label, w.data.results[0].value].filter(Boolean).join(' ')}</div>}
+          <div class="mini"><div><img src={mini} alt="" loading="lazy" decoding="async" width="368" height="484" /></div></div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {hasAbout && (
+    <section class="sec" id="about">
+      <h2>ABOUT</h2>
+      <div class="about">
+        {profile.career.length > 0 && (
+          <div>
+            <h3>CAREER</h3>
+            {profile.career.map((c) => <p><b>{c.period}</b><br />{c.text}</p>)}
+          </div>
+        )}
+        {profile.tools.length > 0 && (
+          <div><h3>TOOLS</h3><p>{profile.tools.join(' · ')}</p></div>
+        )}
+        {(profile.email || profile.links.length > 0) && (
+          <div>
+            <h3>CONTACT</h3>
+            {profile.email && <p><a href={`mailto:${profile.email}`}>{profile.email}</a></p>}
+            {profile.links.map((l) => <p><a href={l.url} target="_blank" rel="noopener">{l.label || l.url} ↗</a></p>)}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .hero{max-width:1240px;margin:auto;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding:40px 28px 80px}
+  .hero h1{font-size:clamp(34px,4.4vw,58px);line-height:1.12;letter-spacing:-.045em;margin:0}
+  .hero h1 em{font-style:normal;color:var(--pt)}
+  .hero p{color:var(--sub);font-size:18px;line-height:1.6;margin:22px 0 0;max-width:460px}
+  .stage{display:flex;gap:18px;align-items:flex-end}
+  .stage .phone{--w:180px;--pad:10px;width:var(--w);padding:var(--pad)}
+  .stage .phone:nth-child(2){margin-bottom:40px}
+  .stage .phone .scr{border-radius:28px}
+  .auto{--sh:calc(var(--w) * 19.5 / 9 - var(--pad) * 2);animation:sc 28s linear infinite alternate}
+  @keyframes sc{from{transform:translateY(0)}to{transform:translateY(calc(-100% + var(--sh)))}}
+  @media (prefers-reduced-motion:reduce){.auto{animation:none}}
+  .sec{max-width:1240px;margin:auto;padding:0 28px 100px}
+  .sec>h2{font-size:13px;letter-spacing:.18em;color:var(--sub);margin:0 0 20px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--card);border-radius:22px;padding:26px 26px 0;overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line)}
+  .card .cat{font-size:13px;color:var(--sub)}
+  .card h3{margin:6px 0 4px;font-size:22px;letter-spacing:-.02em}
+  .card .r{color:var(--pt);font-weight:700;font-size:14px}
+  .card .mini{margin:22px auto 0;width:200px;height:250px;border-radius:30px 30px 0 0;background:var(--frame);padding:8px 8px 0;transition:transform .3s}
+  .card:hover .mini{transform:translateY(-10px)}
+  .card .mini>div{height:100%;border-radius:22px 22px 0 0;overflow:hidden;background:#fff}
+  .card .mini img{width:100%;height:100%;object-fit:cover;object-position:top}
+  .about{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .about>div{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px}
+  .about h3{margin:0 0 14px;font-size:13px;color:var(--sub);letter-spacing:.14em}
+  .about p{margin:6px 0;font-size:14px;line-height:1.5}
+  @media (max-width:1000px){.cards,.about{grid-template-columns:1fr 1fr}}
+  @media (max-width:680px){
+    .hero{grid-template-columns:1fr}
+    .stage{justify-content:center}
+    .stage .phone{--w:150px;--pad:6px;border-radius:28px}
+    .stage .phone .scr{border-radius:22px}
+    .stage .phone:nth-child(3){display:none}
+    .cards,.about{grid-template-columns:1fr}
+  }
+</style>
